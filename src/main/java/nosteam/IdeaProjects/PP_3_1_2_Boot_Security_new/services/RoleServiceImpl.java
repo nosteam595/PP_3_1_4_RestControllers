@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Transactional
 public class RoleServiceImpl implements RoleService {
 
     private final RoleDao roleDao;
@@ -28,6 +27,7 @@ public class RoleServiceImpl implements RoleService {
         return roleDao.getRoleById(id);
     }
 
+    @Transactional
     @Override
     public void addRole(Role role) {
         roleDao.addRole(role);
