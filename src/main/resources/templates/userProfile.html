@@ -1,48 +1,95 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Профиль пользователя</title>
+    <title>User page</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
 </head>
-<body>
+<body class="bg-light">
 
-<h2 th:text="'Профиль: ' + ${user.firstName}">Профиль</h2>
+<!-- ВЕРХНЯЯ ПАНЕЛЬ -->
+<nav class="navbar navbar-dark bg-dark sticky-top shadow-sm">
+    <div class="container-fluid">
+        <span class="navbar-brand">
+            <strong th:text="${user.email}">user@mail.ru</strong>
+            <span class="text-secondary"> with roles: </span>
+            <span th:each="role : ${user.roles}" th:text="${role.name.replace('ROLE_', '') + ' '}">USER</span>
+        </span>
+        <form th:action="@{/logout}" method="POST" class="d-inline">
+            <button type="submit" class="btn btn-link text-secondary text-decoration-none p-0">Logout</button>
+        </form>
+    </div>
+</nav>
 
-<p>
-    <b>Имя:</b> <span th:text="${user.firstName}">Имя</span><br>
-    <b>Фамилия:</b> <span th:text="${user.lastName}">Фамилия</span><br>
-    <b>Email:</b> <span th:text="${user.email}">Email</span><br>
-    <b>Возраст:</b> <span th:text="${user.age}">0</span><br>
-    <b>Роли:</b>
-    <span th:each="role : ${user.roles}"
-          th:if="${role.name.startsWith('ROLE_')}"
-          th:text="${role.name.replace('ROLE_', '') + ' '}">USER</span>
-</p>
+<div class="container-fluid mt-3">
+    <div class="row">
 
-<hr> <!-- Разделительная линия для визуального порядка -->
+        <!-- БОКОВОЕ МЕНЮ -->
+        <div class="col-md-2 px-0">
+            <div class="nav flex-column nav-pills" role="tablist">
+                <!-- Активная вкладка теперь User, так как мы на этой странице -->
+                <a sec:authorize="hasRole('ADMIN')" class="nav-link" th:href="@{/users}">Admin</a>
+                <a class="nav-link active" href="#">User</a>
+            </div>
+        </div>
 
-<!-- БЛОК ДЛЯ АДМИНА -->
-<div sec:authorize="hasRole('ADMIN')">
-    <a th:href="@{/users/edit(id=${user.id})}">Редактировать пользователя</a>
-    <br><br>
+        <!-- ОСНОВНОЙ КОНТЕНТ -->
+        <div class="col-md-10 px-4">
+            <h1 class="mb-3">User information-page</h1>
 
-    <form th:action="@{/users/remove}" method="POST">
-        <input type="hidden" name="id" th:value="${user.id}" />
-        <button type="submit" onclick="return confirm('Вы уверены?')">
-            Удалить пользователя
-        </button>
-    </form>
-    <br>
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">About user</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped align-middle">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Age</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <!-- Добавляем колонки для кнопок (только если зашел админ) -->
+                            <th sec:authorize="hasRole('ADMIN')">Edit</th>
+                            <th sec:authorize="hasRole('ADMIN')">Delete</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td th:text="${user.id}">3</td>
+                            <td th:text="${user.firstName}">user</td>
+                            <td th:text="${user.lastName}">user</td>
+                            <td th:text="${user.age}">30</td>
+                            <td th:text="${user.email}">user@mail.ru</td>
+                            <td>
+                                <span th:each="role : ${user.roles}"
+                                      th:text="${role.name.replace('ROLE_', '') + ' '}">USER</span>
+                            </td>
 
-    <a th:href="@{/users}">Назад ко всем пользователям</a>
-    <br><br>
+                            <!-- Кнопки внутри таблицы для админа -->
+                            <td sec:authorize="hasRole('ADMIN')">
+                                <a th:href="@{/users/edit(id=${user.id})}"
+                                   class="btn btn-info btn-sm text-white px-3"
+                                   style="background-color: #17a2b8; border-color: #17a2b8;">Edit</a>
+                            </td>
+                            <td sec:authorize="hasRole('ADMIN')">
+                                <form th:action="@{/users/remove}" method="POST" class="d-inline">
+                                    <input type="hidden" name="id" th:value="${user.id}" />
+                                    <button type="submit" class="btn btn-danger btn-sm px-2"
+                                            onclick="return confirm('Are you sure?')">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
 </div>
-
-<!-- ВЫХОД (виден всем) -->
-<form th:action="@{/logout}" method="POST">
-    <button type="submit">Выйти из системы</button>
-</form>
 
 </body>
 </html>
