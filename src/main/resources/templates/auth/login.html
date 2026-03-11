@@ -3,23 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <title>Вход</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <style>
+        .form-signin input {
+            margin-bottom: -1px;
+            border-bottom-right-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+        .form-signin input[type="password"] {
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+        }
+    </style>
 </head>
-<body>
 
-<h2>Вход в систему</h2>
+<body class="bg-light d-flex justify-content-center pt-5 vh-100">
 
-<!-- Ошибки и уведомления -->
-<b th:if="${param.error}">Ошибка: Неверный логин или пароль</b>
+<main class="form-signin w-100 m-auto mt-5" style="max-width: 330px; padding: 15px;">
+    <form th:action="@{/auth/login}" method="post">
+        <h1 class="h3 mb-3 fw-normal text-center">Please sign in</h1>
 
-<form th:action="@{/auth/login}" method="post">
-    <label for="username">Имя пользователя:</label><br>
-    <input type="text" id="username" name="username" required autofocus/><br><br>
+        <div th:if="${param.error}" class="alert alert-danger py-2 text-center" style="font-size: 0.9rem;">
+            Неверный логин или пароль
+        </div>
 
-    <label for="password">Пароль:</label><br>
-    <input type="password" id="password" name="password" required/><br><br>
+        <div class="form-floating">
+            <input type="text" name="username" class="form-control" id="floatingInput"
+                   placeholder="Email address" required autofocus>
+            <label for="floatingInput">Email address</label>
+        </div>
 
-    <button type="submit">Войти</button>
-</form>
+        <div class="form-floating mb-3">
+            <input type="password" name="password" class="form-control" id="floatingPassword"
+                   placeholder="Password" required>
+            <label for="floatingPassword">Password</label>
+        </div>
+
+        <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+    </form>
+</main>
 
 </body>
 </html>
