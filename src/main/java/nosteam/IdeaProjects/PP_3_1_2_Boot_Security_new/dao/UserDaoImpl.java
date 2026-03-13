@@ -63,6 +63,12 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    public void addUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        peopleRepository.save(user);
+    }
+
+    @Override
     public void removeUser(User user) {
         entityManager.remove(entityManager.merge(user));
     }
@@ -83,6 +89,25 @@ public class UserDaoImpl implements UserDao {
         } else {
             updatedUser.setRoles(existingUser.getRoles());
         }
+        peopleRepository.save(updatedUser);
+    }
+
+    @Override
+    public void updateUser(User updatedUser) {
+        User existingUser = getUser(updatedUser.getId());
+        if (updatedUser.getPassword() == null || updatedUser.getPassword().isEmpty()) {
+            updatedUser.setPassword(existingUser.getPassword());
+        } else {
+            updatedUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+        }
+//        if (roleIds != null && !roleIds.isEmpty()) {
+//            Set<Role> roles = roleIds.stream()
+//                    .map(roleService::getRoleById)
+//                    .collect(Collectors.toSet());
+//            updatedUser.setRoles(roles);
+//        } else {
+//            updatedUser.setRoles(existingUser.getRoles());
+//        }
         peopleRepository.save(updatedUser);
     }
 }

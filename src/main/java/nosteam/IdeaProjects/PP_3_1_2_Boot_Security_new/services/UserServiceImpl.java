@@ -39,6 +39,11 @@ public class UserServiceImpl implements UserService {
         userDao.addUser(user, roleIds);
     }
 
+    @Override
+    public void addUser(User user) {
+        userDao.addUser(user);
+    }
+
     @Transactional
     @Override
     public void removeUser(User user) {
@@ -49,6 +54,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateUser(User updatedUser, List<Long> roleIds) {
         userDao.updateUser(updatedUser, roleIds);
+    }
+
+    @Override
+    public void updateUser(User updatedUser) {
+        userDao.updateUser(updatedUser);
     }
 
 }

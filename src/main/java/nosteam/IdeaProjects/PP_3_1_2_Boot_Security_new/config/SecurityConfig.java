@@ -24,11 +24,21 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                .csrf(csrf -> csrf.disable())
+
                 .authorizeHttpRequests(auth -> auth
+                        // 1. Статика (JS, CSS) и логин доступны всем
                         .requestMatchers("/css/**", "/js/**").permitAll()
                         .requestMatchers("/auth/login", "/error").permitAll()
-                        .requestMatchers("/users/user/details", "/user/details").hasAnyRole("USER", "ADMIN")
+
+                        // 2. Доступ к API (Данные в формате JSON)
+                        .requestMatchers("/api/users/current").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/api/users/**").hasRole("ADMIN")
+
+                        // 3. Доступ к СТРАНИЦАМ (HTML шаблоны через обычный @Controller)
+                        .requestMatchers("/users/user/details").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/users/**").hasRole("ADMIN")
+
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -42,6 +52,7 @@ public class SecurityConfig {
                         .logoutSuccessUrl("/auth/login")
                 )
                 .userDetailsService(personDetailsService);
+
         return http.build();
     }
 

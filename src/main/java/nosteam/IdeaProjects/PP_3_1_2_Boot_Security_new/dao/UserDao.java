@@ -8,6 +8,8 @@ public interface UserDao {
     User getUser(long id);
     User getUserForProfile(User currentUser, Long id);
     void addUser(User user, List<Long> roleIds);
+    void addUser(User user);
     void removeUser(User user);
     void updateUser(User updatedUser, List<Long> roleIds);
+    void updateUser(User updatedUser);
 }
