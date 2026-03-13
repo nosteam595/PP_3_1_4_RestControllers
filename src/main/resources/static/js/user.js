@@ -1,10 +1,10 @@
-$(document).ready(function () {
+// Чистый JS (Vanilla JS)
+document.addEventListener("DOMContentLoaded", function () {
     showUserInfo();
 });
 
 async function showUserInfo() {
     try {
-        // Запрос к вашему RestController
         const response = await fetch("/api/users/current");
 
         if (!response.ok) {
@@ -16,22 +16,27 @@ async function showUserInfo() {
         // Преобразуем роли в строку (убираем ROLE_)
         const roles = user.roles.map(role => role.name.replace('ROLE_', '')).join(' ');
 
-        // 1. Заполняем данные в шапке (Navbar)
-        $('#header-email').text(user.email);
-        $('#header-roles').text(roles);
+        // 1. Заполняем данные в шапке (вместо $('#id').text(...))
+        const headerEmail = document.getElementById('header-email');
+        const headerRoles = document.getElementById('header-roles');
+
+        if (headerEmail) headerEmail.textContent = user.email;
+        if (headerRoles) headerRoles.textContent = roles;
 
         // 2. Заполняем строку в таблице
-        const userRow = `
-            <tr>
-                <td>${user.id}</td>
-                <td>${user.firstName}</td>
-                <td>${user.lastName}</td>
-                <td>${user.age}</td>
-                <td>${user.email}</td>
-                <td>${roles}</td>
-            </tr>`;
-
-        $('#user-info-table').html(userRow);
+        const tableBody = document.getElementById('user-info-table');
+        if (tableBody) {
+            const userRow = `
+                <tr>
+                    <td>${user.id}</td>
+                    <td>${user.firstName}</td>
+                    <td>${user.lastName}</td>
+                    <td>${user.age}</td>
+                    <td>${user.email}</td>
+                    <td>${roles}</td>
+                </tr>`;
+            tableBody.innerHTML = userRow;
+        }
 
     } catch (error) {
         console.error("Error loading user info:", error);

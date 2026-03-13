@@ -24,21 +24,21 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
+                .csrf(csrf -> csrf.disable()) // Обязательно для REST
+
+                // ОТКЛЮЧАЕМ CSP и FrameOptions (для корректной работы JS и модалок)
+                .headers(headers -> headers
+                        .frameOptions(frame -> frame.disable())
+                        .contentSecurityPolicy(csp -> csp.policyDirectives("default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';"))
+                )
 
                 .authorizeHttpRequests(auth -> auth
-                        // 1. Статика (JS, CSS) и логин доступны всем
                         .requestMatchers("/css/**", "/js/**").permitAll()
                         .requestMatchers("/auth/login", "/error").permitAll()
-
-                        // 2. Доступ к API (Данные в формате JSON)
                         .requestMatchers("/api/users/current").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/api/users/**").hasRole("ADMIN")
-
-                        // 3. Доступ к СТРАНИЦАМ (HTML шаблоны через обычный @Controller)
                         .requestMatchers("/users/user/details").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/users/**").hasRole("ADMIN")
-
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form

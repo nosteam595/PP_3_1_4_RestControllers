@@ -27,7 +27,7 @@
         <div class="col-md-2 px-0 pt-3">
             <div class="nav flex-column nav-pills">
                 <!-- Ссылка видна только админу через Thymeleaf Security -->
-                <a sec:authorize="hasRole('ADMIN')" class="nav-link" href="/admin">Admin</a>
+                <a sec:authorize="hasRole('ADMIN')" class="nav-link" href="/users">Admin</a>
                 <a class="nav-link active" href="#">User</a>
             </div>
         </div>
@@ -62,9 +62,7 @@
     </div>
 </div>
 
-<script src="https://code.jquery.com"></script>
 <script src="/js/bootstrap.bundle.min.js"></script>
-<!-- Подключаем наш скрипт -->
 <script src="/js/user.js"></script>
 </body>
 </html>
