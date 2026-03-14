@@ -1,7 +1,7 @@
 package nosteam.IdeaProjects.PP_3_1_2_Boot_Security_new.services;
 
 import nosteam.IdeaProjects.PP_3_1_2_Boot_Security_new.model.User;
-import nosteam.IdeaProjects.PP_3_1_2_Boot_Security_new.repositories.PeopleRepository;
+import nosteam.IdeaProjects.PP_3_1_2_Boot_Security_new.repositories.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,37 +10,37 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final PeopleRepository peopleRepository;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(PeopleRepository peopleRepository, PasswordEncoder passwordEncoder) {
-        this.peopleRepository = peopleRepository;
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional(readOnly = true)
     @Override
     public List<User> getAllUsers() {
-        return peopleRepository.findAll();
+        return userRepository.findAll();
     }
 
     @Transactional(readOnly = true)
     @Override
     public User getUser(long id) {
-        return peopleRepository.findById(id).orElse(null);
+        return userRepository.findById(id).orElse(null);
     }
 
     @Transactional
     @Override
     public void addUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        peopleRepository.save(user);
+        userRepository.save(user);
     }
 
     @Transactional
     @Override
     public void removeUser(User user) {
-        peopleRepository.delete(user);
+        userRepository.delete(user);
     }
 
     @Transactional
@@ -52,6 +52,6 @@ public class UserServiceImpl implements UserService {
         } else {
             updatedUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
         }
-        peopleRepository.save(updatedUser);
+        userRepository.save(updatedUser);
     }
 }
