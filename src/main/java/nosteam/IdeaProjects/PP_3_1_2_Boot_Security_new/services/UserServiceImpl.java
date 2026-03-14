@@ -1,7 +1,7 @@
 package nosteam.IdeaProjects.PP_3_1_2_Boot_Security_new.services;
 
-import nosteam.IdeaProjects.PP_3_1_2_Boot_Security_new.dao.UserDao;
 import nosteam.IdeaProjects.PP_3_1_2_Boot_Security_new.model.User;
+import nosteam.IdeaProjects.PP_3_1_2_Boot_Security_new.repositories.PeopleRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,37 +10,37 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final UserDao userDao;
+    private final PeopleRepository peopleRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserDao userDao, PasswordEncoder passwordEncoder) {
-        this.userDao = userDao;
+    public UserServiceImpl(PeopleRepository peopleRepository, PasswordEncoder passwordEncoder) {
+        this.peopleRepository = peopleRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional(readOnly = true)
     @Override
     public List<User> getAllUsers() {
-        return userDao.getAllUsers();
+        return peopleRepository.findAll();
     }
 
     @Transactional(readOnly = true)
     @Override
     public User getUser(long id) {
-        return userDao.getUser(id);
+        return peopleRepository.findById(id).orElse(null);
     }
 
     @Transactional
     @Override
     public void addUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userDao.addUser(user);
+        peopleRepository.save(user);
     }
 
     @Transactional
     @Override
     public void removeUser(User user) {
-        userDao.removeUser(user);
+        peopleRepository.delete(user);
     }
 
     @Transactional
@@ -52,6 +52,6 @@ public class UserServiceImpl implements UserService {
         } else {
             updatedUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
         }
-        userDao.updateUser(updatedUser);
+        peopleRepository.save(updatedUser);
     }
 }
