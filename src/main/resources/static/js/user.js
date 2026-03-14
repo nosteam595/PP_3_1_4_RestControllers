@@ -1,4 +1,3 @@
-// Чистый JS (Vanilla JS)
 document.addEventListener("DOMContentLoaded", function () {
     showUserInfo();
 });

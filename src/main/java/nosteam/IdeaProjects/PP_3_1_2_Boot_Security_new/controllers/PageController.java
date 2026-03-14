@@ -8,11 +8,11 @@ public class PageController {
 
     @GetMapping("/users")
     public String getAdminPage() {
-        return "users"; // Проверьте, что файл называется users.html в папке templates
+        return "users";
     }
 
     @GetMapping("/users/user/details")
     public String getUserPage() {
-        return "userProfile"; // Проверьте, что файл называется userProfile.html
+        return "userProfile";
     }
 }
