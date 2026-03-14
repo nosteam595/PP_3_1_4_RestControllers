@@ -27,18 +27,6 @@ public class UserServiceImpl implements UserService {
         return userDao.getUser(id);
     }
 
-    @Transactional(readOnly = true)
-    @Override
-    public User getUserForProfile(User currentUser, Long id) {
-        return userDao.getUserForProfile(currentUser, id);
-    }
-
-    @Transactional
-    @Override
-    public void addUser(User user, List<Long> roleIds) {
-        userDao.addUser(user, roleIds);
-    }
-
     @Override
     public void addUser(User user) {
         userDao.addUser(user);
@@ -50,15 +38,8 @@ public class UserServiceImpl implements UserService {
         userDao.removeUser(user);
     }
 
-    @Transactional
-    @Override
-    public void updateUser(User updatedUser, List<Long> roleIds) {
-        userDao.updateUser(updatedUser, roleIds);
-    }
-
     @Override
     public void updateUser(User updatedUser) {
         userDao.updateUser(updatedUser);
     }
-
 }
